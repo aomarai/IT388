@@ -12,9 +12,11 @@
 #include<math.h>
 
 /* Function that adds two vectors */
-void addVectors(double *x, double *y, double*z, int n){
-    int j=0;
-    for (j=0;j<n;j++){
+__global__ void addVectors(double *x, double *y, double*z, int n){
+    int j = blockIdx.x * blockDim.x + threadIdx.x;
+
+    if (j < n)
+    {
         z[j] = x[j] + y[j];
     }
 }
@@ -45,10 +47,14 @@ int main(int argc, char* argv[]) {
     double* z; double* x; double* y;
     int n;
     int i;
+    int blockSize, numBlocks;
     n=atoi(argv[1]); // get vector dimension
-    x = malloc(n*sizeof(double));
-    y = malloc(n*sizeof(double));
-    z = malloc(n*sizeof(double));
+    blockSize = atoi(argv[2]);
+    numBlocks = ceil(double(n)/blockSize);
+
+    cudaMallocManaged(&x, n*sizeof(double));
+    cudaMallocManaged(&y, n*sizeof(double));
+    cudaMallocManaged(&z, n*sizeof(double));
     
     // generate vectors
     for (i=0;i<n;i++){
@@ -56,7 +62,8 @@ int main(int argc, char* argv[]) {
         y[i]=cos(i)*cos(i);
     }
     start = getTime();
-    addVectors(x, y, z,  n);
+    addVectors<<<numBlocks, blockSize>>>(x, y, z, n);
+    cudaDeviceSynchronize();
     elapsed = getTime() - start;
     printf("\nN=%d; Elapsed time:%f\n",n,elapsed);
     // Print vectors
@@ -69,9 +76,6 @@ int main(int argc, char* argv[]) {
         sum += z[i];
     }
     printf("final result: %f\n", sum/n);
-    free(x); free(y); free(z);
+    cudaFree(x); cudaFree(y); cudaFree(z);
     return 0;
 }  /* main */
-
-
-

@@ -33,11 +33,11 @@ void printVectors(double *a, double *b, double*c, int n) {
 /*--------------------------------
  Function to measure run time
  --------------------------------*/
-double getTime(){
+double getTime()
+{
     struct timeval t;
     gettimeofday(&t, NULL);
-    return t.tv_sec + t.tv_usec/1000000.0;
-    
+    return t.tv_sec + t.tv_usec/1000000.0; 
 }
 
 /*------------------------------------------------------------------*/

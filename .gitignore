@@ -1,3 +1,8 @@
 .vscode/c_cpp_properties.json
 Homework 4/omp_mm1
 Homework 4/omp_mm2
+Homework 5/.vscode/c_cpp_properties.json
+Homework 5/cuda_matrixAdd.exe
+Homework 5/cuda_matrixAdd.exp
+Homework 5/cuda_matrixAdd.lib
+Homework 5/.vscode/settings.json
